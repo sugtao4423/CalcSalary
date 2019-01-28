@@ -1,13 +1,13 @@
 package com.tao.calcsalary;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
-public class MainActivity extends Activity implements OnItemClickListener{
+public class MainActivity extends AppCompatActivity implements OnItemClickListener{
 
     private SQLiteDatabase db;
     private CustomAdapter adapter;
