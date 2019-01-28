@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent">
 
     <EditText
         android:id="@+id/create_hour"
@@ -11,7 +11,7 @@
         android:layout_alignParentTop="true"
         android:ems="10"
         android:inputType="number"
-        android:text="0" >
+        android:text="0">
 
         <requestFocus />
     </EditText>
@@ -46,8 +46,8 @@
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
         android:layout_below="@+id/create_hour"
+        android:layout_alignParentLeft="true"
         android:layout_marginTop="29dp"
         android:text="時給" />
 
@@ -64,8 +64,8 @@
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
         android:layout_below="@+id/textView3"
+        android:layout_alignParentLeft="true"
         android:layout_marginTop="20dp"
         android:text="メモ" />
 
@@ -73,16 +73,16 @@
         android:id="@+id/create_memo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/textView4"
         android:layout_alignLeft="@+id/create_jikyu"
+        android:layout_alignBottom="@+id/textView4"
         android:ems="10" />
 
     <TextView
         android:id="@+id/create_change_txt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
         android:layout_below="@+id/textView4"
+        android:layout_alignParentLeft="true"
         android:layout_marginTop="20dp"
         android:text="更新" />
 
