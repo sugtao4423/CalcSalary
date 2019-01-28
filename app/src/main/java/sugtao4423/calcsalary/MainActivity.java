@@ -43,35 +43,23 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
     public void load(){
         adapter.clear();
 
-        ArrayList<Integer> rowid = new ArrayList<Integer>();
-        ArrayList<Integer> hour = new ArrayList<Integer>();
-        ArrayList<Integer> minute = new ArrayList<Integer>();
-        ArrayList<String> changed = new ArrayList<String>();
-        ArrayList<Integer> jikyu = new ArrayList<Integer>();
-        ArrayList<String> memo = new ArrayList<String>();
-
         Cursor c = db.rawQuery("select ROWID, * from database", null);
-        boolean mov = c.moveToFirst();
-        if(!mov){
+        if(!c.moveToFirst()){
             add();
             return;
+        }else{
+            do{
+                int rowid = c.getInt(0);
+                int hour = c.getInt(1);
+                int minute = c.getInt(2);
+                String changed = c.getString(3);
+                int jikyu = c.getInt(4);
+                String memo = c.getString(5);
+
+                WorkItem item = new WorkItem(rowid, jikyu, hour, minute, changed, memo);
+                adapter.add(item);
+            }while(c.moveToNext());
         }
-        while(mov){
-            rowid.add(c.getInt(0));
-            hour.add(c.getInt(1));
-            minute.add(c.getInt(2));
-            changed.add(c.getString(3));
-            jikyu.add(c.getInt(4));
-            memo.add(c.getString(5));
-
-            mov = c.moveToNext();
-        }
-        WorkItem[] item = new WorkItem[rowid.size()];
-
-        for(int i = 0; i < rowid.size(); i++)
-            item[i] = new WorkItem(rowid.get(i), jikyu.get(i), hour.get(i), minute.get(i), changed.get(i), memo.get(i));
-
-        adapter.addAll(item);
     }
 
     @Override
@@ -85,20 +73,20 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
             public void onClick(DialogInterface dialog, int which){
                 final WorkItem item = (WorkItem)parent.getItemAtPosition(position);
                 if(which == 0){
-                    AlertDialog.Builder add_dialog = new AlertDialog.Builder(MainActivity.this);
-                    View add_view = getLayoutInflater().inflate(R.layout.addtime, null);
-                    final EditText add_hour = (EditText)add_view.findViewById(R.id.add_hour);
-                    final EditText add_minute = (EditText)add_view.findViewById(R.id.add_minute);
-                    add_hour.setWidth((int)add_hour.getTextSize() * 5);
-                    add_minute.setWidth((int)add_minute.getTextSize() * 5);
-                    add_dialog.setView(add_view);
-                    add_dialog.setNegativeButton("キャンセル", null)
+                    View addView = getLayoutInflater().inflate(R.layout.addtime, null);
+                    final EditText addHour = (EditText)addView.findViewById(R.id.add_hour);
+                    final EditText addMinute = (EditText)addView.findViewById(R.id.add_minute);
+                    addHour.setWidth((int)addHour.getTextSize() * 5);
+                    addMinute.setWidth((int)addMinute.getTextSize() * 5);
+                    new AlertDialog.Builder(MainActivity.this)
+                            .setView(addView)
+                            .setNegativeButton("キャンセル", null)
                             .setPositiveButton("OK", new OnClickListener(){
 
                                 @Override
                                 public void onClick(DialogInterface dialog, int which){
-                                    int hour = editGetInt(add_hour);
-                                    int minute = editGetInt(add_minute);
+                                    int hour = editText2Int(addHour);
+                                    int minute = editText2Int(addMinute);
                                     hour += item.getHour();
                                     minute += item.getMinute();
                                     String date = new SimpleDateFormat("yyyy/MM/dd", Locale.JAPANESE).format(new Date());
@@ -106,55 +94,55 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
                                             + "changed='" + date + "' where ROWID=" + item.getRowid());
                                     load();
                                 }
-                            });
-                    add_dialog.create().show();
+                            })
+                            .show();
                 }
                 if(which == 1){
                     View v = getLayoutInflater().inflate(R.layout.create, null);
-                    final EditText create_hour = (EditText)v.findViewById(R.id.add_hour);
-                    final EditText create_minute = (EditText)v.findViewById(R.id.add_minute);
-                    final EditText create_jikyu = (EditText)v.findViewById(R.id.create_jikyu);
-                    final EditText create_memo = (EditText)v.findViewById(R.id.create_memo);
-                    final EditText create_change = (EditText)v.findViewById(R.id.create_change);
+                    final EditText createHour = (EditText)v.findViewById(R.id.add_hour);
+                    final EditText createMinute = (EditText)v.findViewById(R.id.add_minute);
+                    final EditText createJikyu = (EditText)v.findViewById(R.id.create_jikyu);
+                    final EditText createMemo = (EditText)v.findViewById(R.id.create_memo);
+                    final EditText createChange = (EditText)v.findViewById(R.id.create_change);
 
-                    int width = (int)create_hour.getTextSize() * 5;
-                    create_hour.setWidth(width);
-                    create_minute.setWidth(width);
-                    create_jikyu.setWidth(width);
+                    int width = (int)createHour.getTextSize() * 5;
+                    createHour.setWidth(width);
+                    createMinute.setWidth(width);
+                    createJikyu.setWidth(width);
 
-                    create_hour.setText(String.valueOf(item.getHour()));
-                    create_minute.setText(String.valueOf(item.getMinute()));
-                    create_jikyu.setText(String.valueOf(item.getJikyu()));
-                    create_memo.setText(item.getMemo());
-                    create_change.setText(item.getChanged());
+                    createHour.setText(String.valueOf(item.getHour()));
+                    createMinute.setText(String.valueOf(item.getMinute()));
+                    createJikyu.setText(String.valueOf(item.getJikyu()));
+                    createMemo.setText(item.getMemo());
+                    createChange.setText(item.getChanged());
 
-                    AlertDialog.Builder change = new AlertDialog.Builder(MainActivity.this);
-                    change.setTitle("変更")
+                    new AlertDialog.Builder(MainActivity.this)
+                            .setTitle("変更")
                             .setView(v)
                             .setNegativeButton("キャンセル", null)
                             .setPositiveButton("OK", new OnClickListener(){
 
                                 @Override
                                 public void onClick(DialogInterface dialog, int which){
-                                    int hour = editGetInt(create_hour);
-                                    int minute = editGetInt(create_minute);
-                                    int jikyu = editGetInt(create_jikyu);
+                                    int hour = editText2Int(createHour);
+                                    int minute = editText2Int(createMinute);
+                                    int jikyu = editText2Int(createJikyu);
 
                                     db.execSQL("update database set hour=" + hour + ", minute=" + minute + ", "
-                                            + "changed='" + create_change.getText().toString() + "', jikyu=" + jikyu +
-                                            ", memo='" + create_memo.getText().toString() + "' where ROWID=" + item.getRowid());
+                                            + "changed='" + createChange.getText().toString() + "', jikyu=" + jikyu +
+                                            ", memo='" + createMemo.getText().toString() + "' where ROWID=" + item.getRowid());
                                     load();
                                 }
-                            });
-                    change.create().show();
+                            })
+                            .show();
                 }
                 if(which == 2){
-                    ListView del = new ListView(MainActivity.this);
-                    CustomAdapter del_ada = new CustomAdapter(MainActivity.this);
-                    del.setAdapter(del_ada);
-                    del_ada.add(item);
-                    AlertDialog.Builder delete = new AlertDialog.Builder(MainActivity.this);
-                    delete.setCustomTitle(del)
+                    ListView delItemListView = new ListView(MainActivity.this);
+                    CustomAdapter delItemAdapter = new CustomAdapter(MainActivity.this);
+                    delItemListView.setAdapter(delItemAdapter);
+                    delItemAdapter.add(item);
+                    new AlertDialog.Builder(MainActivity.this)
+                            .setCustomTitle(delItemListView)
                             .setMessage("本当にこの項目を削除しますか？")
                             .setNegativeButton("キャンセル", null)
                             .setPositiveButton("OK", new OnClickListener(){
@@ -164,8 +152,8 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
                                     db.execSQL("delete from database where ROWID=" + item.getRowid());
                                     load();
                                 }
-                            });
-                    delete.create().show();
+                            })
+                            .show();
                 }
             }
         });
@@ -175,52 +163,53 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
     @SuppressLint("InflateParams")
     public void add(){
         View v = getLayoutInflater().inflate(R.layout.create, null);
-        final EditText create_hour = (EditText)v.findViewById(R.id.add_hour);
-        final EditText create_minute = (EditText)v.findViewById(R.id.add_minute);
-        final EditText create_jikyu = (EditText)v.findViewById(R.id.create_jikyu);
-        final EditText create_memo = (EditText)v.findViewById(R.id.create_memo);
+        final EditText createHour = (EditText)v.findViewById(R.id.add_hour);
+        final EditText createMinute = (EditText)v.findViewById(R.id.add_minute);
+        final EditText createJikyu = (EditText)v.findViewById(R.id.create_jikyu);
+        final EditText createMemo = (EditText)v.findViewById(R.id.create_memo);
 
         v.findViewById(R.id.text_change).setVisibility(View.GONE);
         v.findViewById(R.id.create_change).setVisibility(View.GONE);
 
-        int width = (int)create_hour.getTextSize() * 5;
-        create_hour.setWidth(width);
-        create_minute.setWidth(width);
-        create_jikyu.setWidth(width);
+        int width = (int)createHour.getTextSize() * 5;
+        createHour.setWidth(width);
+        createMinute.setWidth(width);
+        createJikyu.setWidth(width);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("項目を追加")
+        new AlertDialog.Builder(this)
+                .setTitle("項目を追加")
                 .setView(v)
                 .setNegativeButton("キャンセル", null)
                 .setPositiveButton("OK", new OnClickListener(){
 
                     @Override
                     public void onClick(DialogInterface dialog, int which){
-                        int hour = editGetInt(create_hour);
-                        int minute = editGetInt(create_minute);
-                        int jikyu = editGetInt(create_jikyu);
+                        int hour = editText2Int(createHour);
+                        int minute = editText2Int(createMinute);
+                        int jikyu = editText2Int(createJikyu);
                         String date = new SimpleDateFormat("yyyy/MM/dd", Locale.JAPANESE).format(new Date());
                         db.execSQL("insert into database values(" + hour + ", " + minute + ", '" + date + "', " + jikyu + ", '"
-                                + create_memo.getText().toString() + "')");
+                                + createMemo.getText().toString() + "')");
                         load();
                     }
-                });
-        builder.create().show();
+                })
+                .show();
     }
 
-    public int editGetInt(EditText edit){
-        String text = edit.getText().toString();
-        if(text.isEmpty())
+    public int editText2Int(EditText editText){
+        String text = editText.getText().toString();
+        if(text.isEmpty()){
             return 0;
-        else
+        }else{
             return Integer.parseInt(text);
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
-        MenuItem add = menu.add(0, Menu.FIRST, Menu.NONE, "追加");
-        add.setIcon(R.drawable.ic_add_circle_outline_black_24dp);
-        add.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        menu.add(0, Menu.FIRST, Menu.NONE, "追加")
+                .setIcon(R.drawable.ic_add_circle_outline_black_24dp)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         return true;
     }
 
