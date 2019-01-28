@@ -221,4 +221,10 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        db.close();
+    }
+
 }
