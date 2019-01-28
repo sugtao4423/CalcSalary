@@ -220,14 +220,17 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
-        MenuItem item = menu.add("追加");
-        item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        MenuItem add = menu.add(0, Menu.FIRST, Menu.NONE, "追加");
+        add.setIcon(R.drawable.ic_add_circle_outline_black_24dp);
+        add.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
-        add();
+        if(item.getItemId() == Menu.FIRST){
+            add();
+        }
         return super.onOptionsItemSelected(item);
     }
 
