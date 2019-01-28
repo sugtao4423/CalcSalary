@@ -111,8 +111,8 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
                 }
                 if(which == 1){
                     View v = getLayoutInflater().inflate(R.layout.create, null);
-                    final EditText create_hour = (EditText)v.findViewById(R.id.create_hour);
-                    final EditText create_minute = (EditText)v.findViewById(R.id.create_minute);
+                    final EditText create_hour = (EditText)v.findViewById(R.id.add_hour);
+                    final EditText create_minute = (EditText)v.findViewById(R.id.add_minute);
                     final EditText create_jikyu = (EditText)v.findViewById(R.id.create_jikyu);
                     final EditText create_memo = (EditText)v.findViewById(R.id.create_memo);
                     final EditText create_change = (EditText)v.findViewById(R.id.create_change);
@@ -175,15 +175,13 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
     @SuppressLint("InflateParams")
     public void add(){
         View v = getLayoutInflater().inflate(R.layout.create, null);
-        final EditText create_hour = (EditText)v.findViewById(R.id.create_hour);
-        final EditText create_minute = (EditText)v.findViewById(R.id.create_minute);
+        final EditText create_hour = (EditText)v.findViewById(R.id.add_hour);
+        final EditText create_minute = (EditText)v.findViewById(R.id.add_minute);
         final EditText create_jikyu = (EditText)v.findViewById(R.id.create_jikyu);
         final EditText create_memo = (EditText)v.findViewById(R.id.create_memo);
 
-        v.findViewById(R.id.create_change_txt).setVisibility(View.GONE);
-        ;
+        v.findViewById(R.id.text_change).setVisibility(View.GONE);
         v.findViewById(R.id.create_change).setVisibility(View.GONE);
-        ;
 
         int width = (int)create_hour.getTextSize() * 5;
         create_hour.setWidth(width);
