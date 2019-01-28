@@ -1,4 +1,4 @@
-package com.tao.calcsalary;
+package sugtao4423.calcsalary;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;

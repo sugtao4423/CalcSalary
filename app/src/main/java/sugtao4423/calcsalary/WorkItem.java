@@ -1,4 +1,4 @@
-package com.tao.calcsalary;
+package sugtao4423.calcsalary;
 
 public class WorkItem{
 
