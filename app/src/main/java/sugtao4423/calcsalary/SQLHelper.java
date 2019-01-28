@@ -12,7 +12,7 @@ public class SQLHelper extends SQLiteOpenHelper{
 
     @Override
     public void onCreate(SQLiteDatabase db){
-        db.execSQL("create table database(hour, minute, changed, jikyu, memo)");
+        db.execSQL("CREATE TABLE database(hour, minute, changed, jikyu, memo)");
     }
 
     @Override

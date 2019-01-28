@@ -23,7 +23,7 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements OnItemClickListener{
 
-    private SQLiteDatabase db;
+    private DBUtils dbUtils;
     private CustomAdapter adapter;
 
     @Override
@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
         list.setAdapter(adapter);
         setContentView(list);
 
-        db = new SQLHelper(this).getWritableDatabase();
+        dbUtils = new DBUtils(getApplicationContext());
 
         load();
     }
@@ -43,22 +43,11 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
     public void load(){
         adapter.clear();
 
-        Cursor c = db.rawQuery("select ROWID, * from database", null);
-        if(!c.moveToFirst()){
-            add();
-            return;
+        ArrayList<WorkItem> items = dbUtils.getWorkItems();
+        if(items.size() > 0){
+            adapter.addAll(items);
         }else{
-            do{
-                int rowid = c.getInt(0);
-                int hour = c.getInt(1);
-                int minute = c.getInt(2);
-                String changed = c.getString(3);
-                int jikyu = c.getInt(4);
-                String memo = c.getString(5);
-
-                WorkItem item = new WorkItem(rowid, jikyu, hour, minute, changed, memo);
-                adapter.add(item);
-            }while(c.moveToNext());
+            add();
         }
     }
 
@@ -90,8 +79,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
                                     hour += item.getHour();
                                     minute += item.getMinute();
                                     String date = new SimpleDateFormat("yyyy/MM/dd", Locale.JAPANESE).format(new Date());
-                                    db.execSQL("update database set hour=" + hour + ", minute=" + minute + ", "
-                                            + "changed='" + date + "' where ROWID=" + item.getRowid());
+                                    dbUtils.updateWorkTime(item.getRowid(), hour, minute, date, item.getJikyu(), item.getMemo());
                                     load();
                                 }
                             })
@@ -127,10 +115,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
                                     int hour = editText2Int(createHour);
                                     int minute = editText2Int(createMinute);
                                     int jikyu = editText2Int(createJikyu);
-
-                                    db.execSQL("update database set hour=" + hour + ", minute=" + minute + ", "
-                                            + "changed='" + createChange.getText().toString() + "', jikyu=" + jikyu +
-                                            ", memo='" + createMemo.getText().toString() + "' where ROWID=" + item.getRowid());
+                                    dbUtils.updateWorkTime(item.getRowid(), hour, minute, createChange.getText().toString(), jikyu, createMemo.getText().toString());
                                     load();
                                 }
                             })
@@ -149,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
 
                                 @Override
                                 public void onClick(DialogInterface dialog, int which){
-                                    db.execSQL("delete from database where ROWID=" + item.getRowid());
+                                    dbUtils.deleteWorkItem(item.getRowid());
                                     load();
                                 }
                             })
@@ -188,8 +173,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
                         int minute = editText2Int(createMinute);
                         int jikyu = editText2Int(createJikyu);
                         String date = new SimpleDateFormat("yyyy/MM/dd", Locale.JAPANESE).format(new Date());
-                        db.execSQL("insert into database values(" + hour + ", " + minute + ", '" + date + "', " + jikyu + ", '"
-                                + createMemo.getText().toString() + "')");
+                        dbUtils.createWorkItem(hour, minute, date, jikyu, createMemo.getText().toString());
                         load();
                     }
                 })
@@ -224,7 +208,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
     @Override
     public void onDestroy(){
         super.onDestroy();
-        db.close();
+        dbUtils.close();
     }
 
 }
