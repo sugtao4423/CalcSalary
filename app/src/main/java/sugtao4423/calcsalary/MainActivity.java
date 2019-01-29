@@ -4,9 +4,11 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,8 +25,11 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements OnItemClickListener{
 
+    public static final String KEY_ITEM_REVERSE = "isReverse";
+
     private DBUtils dbUtils;
     private CustomAdapter adapter;
+    private SharedPreferences pref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -36,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
         setContentView(list);
 
         dbUtils = new DBUtils(getApplicationContext());
+        pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         load();
     }
@@ -45,7 +51,13 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
 
         ArrayList<WorkItem> items = dbUtils.getWorkItems();
         if(items.size() > 0){
-            adapter.addAll(items);
+            if(pref.getBoolean(KEY_ITEM_REVERSE, false)){
+                for(WorkItem i : items){
+                    adapter.insert(i, 0);
+                }
+            }else{
+                adapter.addAll(items);
+            }
         }else{
             add();
         }
@@ -191,7 +203,10 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
-        menu.add(0, Menu.FIRST, Menu.NONE, "追加")
+        menu.add(0, Menu.FIRST, Menu.NONE, "逆順")
+                .setIcon(R.drawable.ic_format_line_spacing_black_24dp)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        menu.add(0, Menu.FIRST + 1, Menu.NONE, "追加")
                 .setIcon(R.drawable.ic_add_circle_outline_black_24dp)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         return true;
@@ -200,6 +215,10 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         if(item.getItemId() == Menu.FIRST){
+            boolean isReverse = pref.getBoolean(KEY_ITEM_REVERSE, false);
+            pref.edit().putBoolean(KEY_ITEM_REVERSE, !isReverse).commit();
+            load();
+        }else if(item.getItemId() == Menu.FIRST + 1){
             add();
         }
         return super.onOptionsItemSelected(item);
