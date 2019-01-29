@@ -54,6 +54,9 @@ public class CustomAdapter extends ArrayAdapter<WorkItem>{
         holder.totalyen.setText(yen_str);
         holder.memo.setText(item.getMemo());
 
+        int bgResource = (position % 2 == 0) ? R.drawable.position0 : R.drawable.position1;
+        convertView.setBackgroundResource(bgResource);
+
         return convertView;
     }
 

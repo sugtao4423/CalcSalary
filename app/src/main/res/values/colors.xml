@@ -4,4 +4,9 @@
     <color name="primaryColor">#3F51B5</color>
     <color name="primaryColorDark">#303F9F</color>
 
+    <color name="position0">#F9F9F9</color>
+    <color name="position1">#E9E9E9</color>
+    <color name="position0Press">#C7C7C7</color>
+    <color name="position1Press">#B5B5B5</color>
+
 </resources>
