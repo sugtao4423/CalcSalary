@@ -17,7 +17,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginLeft="24dp"
         android:layout_marginTop="8dp"
-        android:text="時給"
+        android:text="@string/wage"
         app:layout_constraintStart_toStartOf="@+id/include"
         app:layout_constraintTop_toBottomOf="@+id/include" />
 
@@ -37,7 +37,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="メモ"
+        android:text="@string/memo"
         app:layout_constraintStart_toStartOf="@+id/text_wage"
         app:layout_constraintTop_toBottomOf="@+id/create_wage" />
 
@@ -57,7 +57,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="更新"
+        android:text="@string/update"
         app:layout_constraintStart_toStartOf="@+id/text_memo"
         app:layout_constraintTop_toBottomOf="@+id/create_memo" />
 

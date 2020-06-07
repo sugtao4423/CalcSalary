@@ -14,7 +14,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:text="x時間y分"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
@@ -23,8 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/worktime"
         android:layout_alignLeft="@+id/worktime"
-        android:layout_marginTop="8dp"
-        android:text="変更日：" />
+        android:layout_marginTop="8dp" />
 
     <TextView
         android:id="@+id/totalyen"
@@ -33,7 +31,6 @@
         android:layout_alignBaseline="@+id/worktime"
         android:layout_alignBottom="@+id/worktime"
         android:layout_alignParentRight="true"
-        android:text="¥114,514"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
@@ -42,7 +39,6 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/changed"
         android:layout_alignRight="@+id/totalyen"
-        android:layout_alignBottom="@+id/changed"
-        android:text="memo" />
+        android:layout_alignBottom="@+id/changed" />
 
 </RelativeLayout>

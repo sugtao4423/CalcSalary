@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -28,7 +27,7 @@
         android:id="@+id/text_hour"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="時間"
+        android:text="@string/hour"
         app:layout_constraintBaseline_toBaselineOf="@+id/add_hour"
         app:layout_constraintEnd_toStartOf="@+id/add_minute"
         app:layout_constraintHorizontal_bias="0.5"
@@ -53,7 +52,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
         android:layout_marginRight="24dp"
-        android:text="分"
+        android:text="@string/minute"
         app:layout_constraintBaseline_toBaselineOf="@+id/add_minute"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
