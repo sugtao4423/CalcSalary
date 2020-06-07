@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -12,7 +11,7 @@
         android:layout_height="wrap_content" />
 
     <TextView
-        android:id="@+id/text_jikyu"
+        android:id="@+id/text_wage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -23,15 +22,15 @@
         app:layout_constraintTop_toBottomOf="@+id/include" />
 
     <EditText
-        android:id="@+id/create_jikyu"
+        android:id="@+id/create_wage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:ems="10"
         android:inputType="number"
-        app:layout_constraintBaseline_toBaselineOf="@+id/text_jikyu"
-        app:layout_constraintStart_toEndOf="@+id/text_jikyu" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/text_wage"
+        app:layout_constraintStart_toEndOf="@+id/text_wage" />
 
     <TextView
         android:id="@+id/text_memo"
@@ -39,8 +38,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="メモ"
-        app:layout_constraintStart_toStartOf="@+id/text_jikyu"
-        app:layout_constraintTop_toBottomOf="@+id/create_jikyu" />
+        app:layout_constraintStart_toStartOf="@+id/text_wage"
+        app:layout_constraintTop_toBottomOf="@+id/create_wage" />
 
     <EditText
         android:id="@+id/create_memo"

@@ -38,10 +38,13 @@ class CustomAdapter(context: Context) : ArrayAdapter<WorkItem>(context, android.
 
         val item = getItem(position) ?: return view!!
 
-        holder.workTime.text = "${item.hour}時間${item.minute}分"
+        val hours = item.minutes / 60
+        val minutes = item.minutes - hours * 60
+
+        holder.workTime.text = "${hours}時間${minutes}分"
         holder.changed.text = "更新:${item.changed}"
         holder.totalYen.text = run {
-            val yen = (item.hour + item.minute.toDouble() / 60) * item.jikyu
+            val yen = (hours + minutes.toDouble() / 60) * item.wage
             NumberFormat.getCurrencyInstance().format(yen)
         }
         holder.memo.text = item.memo

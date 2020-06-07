@@ -8,16 +8,15 @@ class DBUtils(context: Context) {
 
     fun getWorkItems(): ArrayList<WorkItem> {
         val result = arrayListOf<WorkItem>()
-        db.rawQuery("SELECT ROWID, * FROM 'database'", null).apply {
+        db.rawQuery("SELECT ROWID, * FROM salaries", null).apply {
             while (moveToNext()) {
                 val rowId = getInt(0)
-                val hour = getInt(1)
-                val minute = getInt(2)
+                val wage = getInt(1)
+                val minutes = getInt(2)
                 val changed = getString(3)
-                val jikyu = getInt(4)
-                val memo = getString(5)
+                val memo = getString(4)
 
-                val item = WorkItem(rowId, jikyu, hour, minute, changed, memo)
+                val item = WorkItem(rowId, wage, minutes, changed, memo)
                 result.add(item)
             }
             close()
@@ -25,13 +24,12 @@ class DBUtils(context: Context) {
         return result
     }
 
-    fun createWorkItem(hour: Int, minute: Int, changed: String, jikyu: Int, memo: String) {
-        val sql = "INSERT INTO 'database' VALUES (?, ?, ?, ?, ?)"
+    fun createWorkItem(wage: Int, minutes: Int, changed: String, memo: String) {
+        val sql = "INSERT INTO salaries VALUES (?, ?, ?, ?)"
         val bindArgs = arrayOf(
-                hour.toString(),
-                minute.toString(),
+                wage.toString(),
+                minutes.toString(),
                 changed,
-                jikyu.toString(),
                 memo
         )
         db.compileStatement(sql).apply {
@@ -41,15 +39,14 @@ class DBUtils(context: Context) {
         }
     }
 
-    fun updateWorkTime(targetRowid: Int, hour: Int, minute: Int, changed: String, jikyu: Int, memo: String) {
-        val sql = "UPDATE 'database' SET hour = ?, minute = ?, changed = ?, jikyu = ?, memo = ? WHERE ROWID = ?"
+    fun updateWorkTime(targetRowId: Int, wage: Int, minutes: Int, changed: String, memo: String) {
+        val sql = "UPDATE salaries SET wage = ?, minutes = ?, changed = ?, memo = ? WHERE ROWID = ?"
         val bindArgs = arrayOf(
-                hour.toString(),
-                minute.toString(),
+                wage.toString(),
+                minutes.toString(),
                 changed,
-                jikyu.toString(),
                 memo,
-                targetRowid.toString()
+                targetRowId.toString()
         )
         db.compileStatement(sql).apply {
             bindAllArgsAsStrings(bindArgs)
@@ -58,8 +55,8 @@ class DBUtils(context: Context) {
         }
     }
 
-    fun deleteWorkItem(targetRowid: Int) {
-        val sql = "DELETE FROM 'database' WHERE ROWID = $targetRowid"
+    fun deleteWorkItem(targetRowId: Int) {
+        val sql = "DELETE FROM salaries WHERE ROWID = $targetRowId"
         db.execSQL(sql)
     }
 

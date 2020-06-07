@@ -77,12 +77,9 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemClickListener {
                                     .setView(v)
                                     .setNegativeButton("キャンセル", null)
                                     .setPositiveButton("OK") { _, _ ->
-                                        var hour = editText2Int(addHour)
-                                        var minute = editText2Int(addMinute)
-                                        hour += item.hour
-                                        minute += item.minute
+                                        val totalMinutes = item.minutes + hourMin2min(addHour, addMinute)
                                         val date = SimpleDateFormat("yyyy/MM/dd", Locale.JAPANESE).format(Date())
-                                        dbUtils.updateWorkTime(item.rowId, hour, minute, date, item.jikyu, item.memo)
+                                        dbUtils.updateWorkTime(item.rowId, item.wage, totalMinutes, date, item.memo)
                                         load()
                                     }
                                     .show()
@@ -91,19 +88,20 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemClickListener {
                             val v = layoutInflater.inflate(R.layout.create, parent, false)
                             val createHour = v.findViewById<EditText>(R.id.add_hour)
                             val createMinute = v.findViewById<EditText>(R.id.add_minute)
-                            val createJikyu = v.findViewById<EditText>(R.id.create_jikyu)
+                            val createWage = v.findViewById<EditText>(R.id.create_wage)
                             val createMemo = v.findViewById<EditText>(R.id.create_memo)
                             val createChange = v.findViewById<EditText>(R.id.create_change)
 
                             (createHour.textSize.toInt() * 5).let {
                                 createHour.width = it
                                 createMinute.width = it
-                                createJikyu.width = it
+                                createWage.width = it
                             }
 
-                            createHour.setText(item.hour.toString())
-                            createMinute.setText(item.minute.toString())
-                            createJikyu.setText(item.jikyu.toString())
+                            val hourMin = min2hourMin(item.minutes)
+                            createHour.setText(hourMin.first.toString())
+                            createMinute.setText(hourMin.second.toString())
+                            createWage.setText(item.wage.toString())
                             createMemo.setText(item.memo)
                             createChange.setText(item.changed)
 
@@ -112,10 +110,9 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemClickListener {
                                     .setTitle("変更")
                                     .setNegativeButton("キャンセル", null)
                                     .setPositiveButton("OK") { _, _ ->
-                                        val hour = editText2Int(createHour)
-                                        val minute = editText2Int(createMinute)
-                                        val jikyu = editText2Int(createJikyu)
-                                        dbUtils.updateWorkTime(item.rowId, hour, minute, createChange.text.toString(), jikyu, createMemo.text.toString())
+                                        val totalMinutes = hourMin2min(createHour, createMinute)
+                                        val wage = editText2Int(createWage)
+                                        dbUtils.updateWorkTime(item.rowId, wage, totalMinutes, createChange.text.toString(), createMemo.text.toString())
                                         load()
                                     }
                                     .show()
@@ -144,7 +141,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemClickListener {
         val v = layoutInflater.inflate(R.layout.create, null)
         val createHour = v.findViewById<EditText>(R.id.add_hour)
         val createMinute = v.findViewById<EditText>(R.id.add_minute)
-        val createJikyu = v.findViewById<EditText>(R.id.create_jikyu)
+        val createWage = v.findViewById<EditText>(R.id.create_wage)
         val createMemo = v.findViewById<EditText>(R.id.create_memo)
 
         v.findViewById<TextView>(R.id.text_change).visibility = View.GONE
@@ -153,7 +150,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemClickListener {
         (createHour.textSize.toInt() * 5).let {
             createHour.width = it
             createMinute.width = it
-            createJikyu.width = it
+            createWage.width = it
         }
 
         AlertDialog.Builder(this)
@@ -161,23 +158,29 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemClickListener {
                 .setView(v)
                 .setNegativeButton("キャンセル", null)
                 .setPositiveButton("OK") { _, _ ->
-                    val hour = editText2Int(createHour)
-                    val minute = editText2Int(createMinute)
-                    val jikyu = editText2Int(createJikyu)
+                    val totalMinutes = hourMin2min(createHour, createMinute)
+                    val wage = editText2Int(createWage)
                     val date = SimpleDateFormat("yyyy/MM/dd", Locale.JAPANESE).format(Date())
-                    dbUtils.createWorkItem(hour, minute, date, jikyu, createMemo.text.toString())
+                    dbUtils.createWorkItem(wage, totalMinutes, date, createMemo.text.toString())
                     load()
                 }
                 .show()
     }
 
     private fun editText2Int(editText: EditText): Int {
-        val text = editText.text.toString()
-        return if (text.isEmpty()) {
-            0
-        } else {
-            text.toInt()
+        return editText.text.toString().let {
+            if (it.isEmpty()) 0 else it.toInt()
         }
+    }
+
+    private fun min2hourMin(min: Int): Pair<Int, Int> {
+        val hours = min / 60
+        val minutes = min - hours * 60
+        return Pair(hours, minutes)
+    }
+
+    private fun hourMin2min(hours: EditText, minutes: EditText): Int {
+        return editText2Int(hours) * 60 + editText2Int(minutes)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
