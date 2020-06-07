@@ -196,7 +196,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemClickListener {
         when (item?.itemId) {
             Menu.FIRST -> {
                 val isReserve = pref.getBoolean(KEY_ITEM_REVERSE, false)
-                pref.edit().putBoolean(KEY_ITEM_REVERSE, !isReserve).commit()
+                pref.edit().putBoolean(KEY_ITEM_REVERSE, !isReserve).apply()
                 load()
             }
             Menu.FIRST + 1 -> add()
